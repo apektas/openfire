@@ -1,5 +1,3 @@
-# This image is not supported anymore. As an alternative you can use: https://github.com/sameersbn/docker-openfire
-
 # Openfire Container Based on OpenJDK 8
 
 - [Introduction](#introduction)
@@ -16,14 +14,14 @@
 
 Openfire is a real time collaboration (RTC) server licensed under the Open Source Apache License. It uses the only widely adopted open protocol for instant messaging, XMPP (also called Jabber). Openfire is incredibly easy to setup and administer, but offers rock-solid security and performance.
 
-This image will be updated from Openfire version 4.2.3 up to newer versions.
+This image will be updated from Openfire version 4.6.6 up to newer versions.
 
 # Getting started
 
 ## Image Pull
 
 ```bash
-docker pull credija/openfire:lts
+docker pull apektas/openfire
 ```
 
 ## Quickstart
@@ -31,12 +29,12 @@ docker pull credija/openfire:lts
 Start Openfire using:
 
 ```bash
-docker run --name openfire-credija -d --restart=always \
+docker run --name openfire -d --restart=always \
   --publish 9090:9090 --publish 5222:5222 --publish 7777:7777 \
   --publish 7070:7070 --publish 7443:7443 \
   --volume /opt/your-persistent-folder:/var/lib/openfire \
   -m 2GB \
-  credija/openfire:lts \
+  apektas/openfire \
   -XX:+UnlockExperimentalVMOptions \
   -XX:+UseCGroupMemoryLimitForHeap
 ```
@@ -63,11 +61,11 @@ chcon -Rt svirt_sandbox_file_t /srv/docker/openfire
 You may append options to the startup command to configure the JVM:
 
 ```bash
-docker run --name openfire-credija -d --restart=always \
+docker run --name openfire -d --restart=always \
   --publish 9090:9090 --publish 5222:5222 --publish 7777:7777 --publish 7070:7070 --publish 7443:7443 \
   --volume /opt/your-persistent-folder:/var/lib/openfire \
   -m 2GB \
-  credija/openfire:lts \
+  apektas/openfire \
   -XX:+UnlockExperimentalVMOptions \
   -XX:+UseCGroupMemoryLimitForHeap
 ```
@@ -89,27 +87,27 @@ To upgrade to newer releases:
   1. Download the updated Docker image:
 
   ```bash
-  docker pull credija/openfire:{version}
+  docker pull apektas/openfire:{version}
   ```
 
   2. Stop the currently running image:
 
   ```bash
-  docker stop openfire-credija
+  docker stop openfire
   ```
 
   3. Remove the stopped container
 
   ```bash
-  docker rm -v openfire-credija
+  docker rm -v openfire
   ```
 
   4. Start the updated image
 
   ```bash
-  docker run -name openfire-credija -d \
+  docker run -name openfire -d \
     [OPTIONS] \
-    credija/openfire:{version}
+    apektas/openfire:{version}
   ```
 
 ## Shell Access
@@ -117,7 +115,7 @@ To upgrade to newer releases:
 For debugging and maintenance purposes you may want access the containers shell. If you are using Docker version `1.3.0` or higher you can access a running containers shell by starting `bash` using `docker exec`:
 
 ```bash
-docker exec -it openfire-credija bash
+docker exec -it openfire bash
 ```
 
 # References

@@ -4,4 +4,6 @@ build:
 	@docker build .
 
 push:
-	@docker push credija/openfire:$(shell cat VERSION)
+	@docker push apektas/openfire:$(shell cat VERSION)
+	@docker push apektas/openfire
+

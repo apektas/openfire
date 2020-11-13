@@ -1,14 +1,63 @@
-version: '2'
+version: "3.7"
+volumes:
+  openfire-db-volume:
+  openfire-volume-data:
+  openfire-volume-log:
+
 services:
+  openfire-db:
+    labels:
+      - "type=config"
+    image: ${PSG_IMAGE:-postgres}
+    container_name: openfire-postgres
+    hostname: openfire-db
+    volumes:
+      #- ${APP_PATH}/DB:/docker-entrypoint-initdb.d
+      - openfire-db-volume:/var/lib/postgresql/data
+    ports:
+      - "5445:5432"
+    environment:
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=password
+      - POSTGRES_DB=openfire
+      #- POSTGRES_MULTIPLE_DATABASES=
+    restart: always
+    networks:
+      - v6-net
+    logging:
+      options:
+        max-file: "10"
+        max-size: "50m"
+
+  # https://stackoverflow:com/questions/39271281/chat-history-and-monitoring-plugin-openfire/39411476:
   openfire:
-    image: credija/openfire:lts
+    labels:
+      - "type=config"
+    image: ${OPENFIRE_IMAGE:-apektas/openfire:4.6.0}
+    container_name: cfs-openfire
+    hostname: cfs-openfire
+    volumes:
+      - openfire-volume-data:/var/lib/openfire
+      - openfire-volume-log:/var/log/openfire
     ports:
       - "9090:9090/tcp"
       - "9091:9091/tcp"
       - "5222:5222/tcp"
       - "7777:7777/tcp"
-      - "7070:7070/tcp"
-      - "7443:7443/tcp"
-    volumes:
-      - /srv/docker/openfire/data:/var/lib/openfire
-      - /srv/docker/openfire/logs:/var/log/openfire
+      # or to be able to used with plugins for Openfire Meetings
+    depends_on:
+      - openfire-db
+#    environment:
+#      - ipAddr=cfs-postgres
+#      - xmppDomain=5432
+    restart: always
+    networks:
+      - v6-net
+    logging:
+      options:
+        max-file: "10"
+        max-size: "50m"
+
+networks:
+  v6-net:
+    name: v6
